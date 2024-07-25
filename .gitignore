@@ -1,0 +1,53 @@
+# Entornos virtuales
+venv/
+env/
+.env
+.env_tf_tensorflow/
+
+# Archivos de configuración de entorno
+*.env
+
+# Archivos de modelo binario
+*.h5
+
+# Archivos de salida y registros
+*.log
+*.out
+*.txt
+*.csv
+
+# Archivos temporales
+*.tmp
+*.temp
+*.swp
+
+# Archivos de caché
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de configuración de entorno
+*.env
+
+# Documentación generada
+docs/_build/
+
+# Ignorar directorios específicos del proyecto
+DICOM/
+JPG/
+
+# Archivos específicos del proyecto
+*.pdf
+*.jpg
+*.jpeg
+*.png
