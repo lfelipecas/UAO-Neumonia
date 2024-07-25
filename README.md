@@ -40,7 +40,7 @@ Para ejecutar el proyecto, es necesario instalar las siguientes librerías, espe
    pip install -r requirements.txt
    ```
 
-4. Descargar el modelo y las imágenes por medio de este enlace [Google Drive](https://drive.google.com/drive/folders/13tel7QqV-ckvcpNUr0ic8j7Y49jlovX3?usp=sharing) y colocarlas en las rutas correspondientes dentro del proyecto.
+4. Descargar el modelo y las imágenes por medio de este enlace [Google Drive](https://drive.google.com/drive/folders/13tel7QqV-ckvcpNUr0ic8j7Y49jlovX3?usp=sharing) y ubicarlas en el mismo directorio del proyecto.
 
 ## Uso
 
