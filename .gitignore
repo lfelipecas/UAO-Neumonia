@@ -45,6 +45,7 @@ docs/_build/
 # Ignorar directorios específicos del proyecto
 DICOM/
 JPG/
+reportes/
 
 # Archivos específicos del proyecto
 *.pdf

@@ -1,16 +1,19 @@
 from tkinter import *
 from tkinter import ttk, font, filedialog
-from tkinter.messagebox import askokcancel, showinfo, WARNING
-from PIL import ImageTk, Image
-import csv
-import tkcap
+from tkinter.messagebox import askokcancel, showinfo
+from PIL import Image, ImageTk
+import os
 from integrator import predict
 from read_img import read_dicom_file, read_jpg_file
+from report_manager import ReportManager  # Importar la nueva clase
 
 class App:
     def __init__(self):
         self.root = Tk()
         self.root.title("Herramienta para la detección rápida de neumonía")
+
+        # Crear instancia de ReportManager
+        self.report_manager = ReportManager(os.path.dirname(__file__))
 
         # BOLD FONT
         fonti = font.Font(weight="bold")
@@ -91,8 +94,9 @@ class App:
 
     # METHODS
     def load_img_file(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
         filepath = filedialog.askopenfilename(
-            initialdir="/",
+            initialdir=base_dir,
             title="Select image",
             filetypes=(
                 ("DICOM", "*.dcm"),
@@ -107,7 +111,7 @@ class App:
             else:
                 self.array, img2show = read_jpg_file(filepath)
 
-            self.img1 = img2show.resize((250, 250), Image.Resampling.LANCZOS)
+            self.img1 = img2show.resize((250, 250), Image.LANCZOS)  # Usar Image.LANCZOS
             self.img1 = ImageTk.PhotoImage(self.img1)
             self.text_img1.image_create(END, image=self.img1)
             self.button1["state"] = "enabled"
@@ -115,32 +119,25 @@ class App:
     def run_model(self):
         self.label, self.proba, self.heatmap = predict(self.array)
         self.img2 = Image.fromarray(self.heatmap)
-        self.img2 = self.img2.resize((250, 250), Image.Resampling.LANCZOS)
+        self.img2 = self.img2.resize((250, 250), Image.LANCZOS)  # Usar Image.LANCZOS
         self.img2 = ImageTk.PhotoImage(self.img2)
         self.text_img2.image_create(END, image=self.img2)
         self.text2.insert(END, self.label)
         self.text3.insert(END, "{:.2f}".format(self.proba) + "%")
 
     def save_results_csv(self):
-        with open("historial.csv", "a") as csvfile:
-            w = csv.writer(csvfile, delimiter="-")
-            w.writerow([self.text1.get(), self.label, "{:.2f}".format(self.proba) + "%"])
-            showinfo(title="Guardar", message="Los datos se guardaron con éxito.")
+        patient_id = self.text1.get()
+        label = self.label
+        probability = self.proba
+        self.report_manager.save_results_csv(patient_id, label, probability)
 
     def create_pdf(self):
-        cap = tkcap.CAP(self.root)
-        ID = "Reporte" + str(self.reportID) + ".jpg"
-        img = cap.capture(ID)
-        img = Image.open(ID)
-        img = img.convert("RGB")
-        pdf_path = r"Reporte" + str(self.reportID) + ".pdf"
-        img.save(pdf_path)
+        self.report_manager.create_pdf(self.root, self.reportID)
         self.reportID += 1
-        showinfo(title="PDF", message="El PDF fue generado con éxito.")
 
     def delete(self):
         answer = askokcancel(
-            title="Confirmación", message="Se borrarán todos los datos.", icon=WARNING
+            title="Confirmación", message="Se borrarán todos los datos.", icon='warning'
         )
         if answer:
             self.text1.delete(0, "end")
